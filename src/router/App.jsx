@@ -6,33 +6,10 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import HomePage from '../pages/Home';
 import DetailPage from '../pages/DetailContact';
 import EditPage from '../pages/Edit';
-// import {GetDataContact} from '../redux/action/Contact';
-// import {useDispatch, useSelector} from 'react-redux';
+import CreatePage from '../pages/AddContact';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const Stack = createNativeStackNavigator();
-
-// function HomeSecreen() {
-//   const dispatch = useDispatch();
-//   const dataContact = useSelector(state => state.getContact);
-
-//   dataContact.forEach(person => {
-//     console.log(`ID: ${person.id}`);
-//     console.log(`Name: ${person.firstName} ${person.lastName}`);
-//     console.log(`Age: ${person.age}`);
-//     console.log(`Photo URL: ${person.photo}`);
-//     console.log('-----------------------------');
-//   });
-
-//   useEffect(() => {
-//     dispatch(GetDataContact());
-//   }, []);
-
-//   return (
-//     <View>
-//       <Text>hello</Text>
-//     </View>
-//   );
-// }
 
 function HomeScreen() {
   return (
@@ -42,7 +19,7 @@ function HomeScreen() {
         animation: 'none',
       }}>
       <Stack.Screen
-        name="Home"
+        name="homePage"
         component={HomePage}
         options={{headerShown: false}}
       />
@@ -54,6 +31,11 @@ function HomeScreen() {
       <Stack.Screen
         name="Edit"
         component={EditPage}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="Create"
+        component={CreatePage}
         options={{headerShown: false}}
       />
     </Stack.Navigator>
@@ -82,32 +64,22 @@ function MainScreen() {
       <Tab.Screen
         name="HomeScreen"
         component={HomeScreen}
-        // options={{
-        //   tabBarLabel: 'Main',
-        //   tabBarIcon: ({color}) => (
-        //     <IonicIcon name="home-outline" color={color} size={26} />
-        //   ),
-        // }}
+        options={{
+          tabBarLabel: 'Main',
+          tabBarIcon: ({color}) => (
+            <Ionicons name="home-outline" color={color} size={26} />
+          ),
+        }}
       />
       <Tab.Screen
-        name="Detail"
-        component={DetailPage}
-        // options={{
-        //   tabBarLabel: 'AddMenu',
-        //   tabBarIcon: ({color}) => (
-        //     <Ionicons name="add-circle-outline" color={color} size={26} />
-        //   ),
-        // }}
-      />
-      <Tab.Screen
-        name="Edit"
-        component={EditPage}
-        // options={{
-        //   tabBarLabel: 'AddMenu',
-        //   tabBarIcon: ({color}) => (
-        //     <Ionicons name="add-circle-outline" color={color} size={26} />
-        //   ),
-        // }}
+        name="Create"
+        component={CreatePage}
+        options={{
+          tabBarLabel: 'AddMenu',
+          tabBarIcon: ({color}) => (
+            <Ionicons name="add-circle-outline" color={color} size={26} />
+          ),
+        }}
       />
     </Tab.Navigator>
   );
@@ -130,6 +102,3 @@ function Router() {
 }
 
 export default Router;
-
-// const {"payload": [{"age": 111, "firstName": "Bilbo", "id": "93ad6070-c92b-11e8-b02f-cbfa15db428b", "lastName": "Baggins", "photo": "http://vignette1.wikia.nocookie.net/lotr/images/6/68/Bilbo_baggins.jpg/revision/latest?cb=20130202022550"}, {"age": 20, "firstName": "Luke", "id": "b3abd640-c92b-11e8-b02f-cbfa15db428b", "lastName": "Skywalker", "photo": "N/A"}], "type": "GET_DATA_SUCCESS"}
-// LOG     next state {"DataReducers": {"data": [[Object], [Object]], "isError": false, "isLoading": false, "isSuccess": true}, "_persist": {"rehydrated": true, "version": -1}}

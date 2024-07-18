@@ -1,11 +1,9 @@
-import React, {useEffect, useState} from 'react';
-import {useDispatch, useSelector} from 'react-redux';
+import React, {useState} from 'react';
 import background from '../../public/images/bg.jpg';
-import avatar from '../../public/images/ava.jpg';
+import ava from '../../public/images/default.jpg';
 import * as ImagePicker from 'react-native-image-picker';
-import {GetDetailContact, EditContact} from '../redux/action/Contact';
+import {PostContact} from '../redux/action/Contact';
 import {
-  ImageBackground,
   View,
   Text,
   TextInput,
@@ -13,8 +11,6 @@ import {
   Image,
   StatusBar,
   TouchableOpacity,
-  FlatList,
-  ScrollView,
   TouchableHighlight,
 } from 'react-native';
 import {
@@ -24,10 +20,10 @@ import {
   MenuProvider,
   MenuTrigger,
 } from 'react-native-popup-menu';
+import {useDispatch} from 'react-redux';
 
-const EditPage = ({route, navigation}) => {
+const CreatePage = ({route, navigation}) => {
   const dispatch = useDispatch();
-  const ContactId = useSelector(state => state?.DetailContact?.data);
   const [photo, setPhoto] = useState(null);
   const [inputData, setInputData] = useState({
     firstName: '',
@@ -35,35 +31,19 @@ const EditPage = ({route, navigation}) => {
     age: 0,
   });
 
-  const photoData = photo
-    ? {
-        uri: photo.uri,
-      }
-    : ContactId?.photo
-    ? {
-        uri: ContactId?.photo,
-      }
-    : null;
-
-  useEffect(() => {
-    dispatch(GetDetailContact(route?.params?.id));
-  }, []);
-
-  const editData = async () => {
+  const createData = async () => {
     let payload = {
       firstName: inputData.firstName,
       lastName: inputData.lastName,
       age: +inputData.age,
-      photo: photoData.uri,
+      photo: photo.uri,
     };
-    dispatch(EditContact(route?.params?.id, payload, navigation));
+    dispatch(PostContact(payload, navigation));
   };
-  console.log(route?.params?.id, 'xxxxxxxxx');
 
   const onChange = (key, value) => {
     setInputData({...inputData, [key]: value});
   };
-  console.log(inputData, 'xxxxxxxxxx');
 
   const cameraLaunch = () => {
     let options = {
@@ -112,18 +92,20 @@ const EditPage = ({route, navigation}) => {
   };
 
   return (
-    <MenuProvider>
+    <MenuProvider style={styles.container}>
       <StatusBar
         translucent
         backgroundColor={'transparent'}
         barStyle={'dark-content'}
       />
-      <View style={styles.container}>
+      <View style={styles.containerArticle}>
         {photo ? (
           <View
             style={{
               alignItems: 'center',
+              marginTop: 10,
               position: 'relative',
+              height: 120,
             }}>
             <View
               style={{
@@ -133,7 +115,7 @@ const EditPage = ({route, navigation}) => {
                 zIndex: 1,
                 position: 'absolute',
                 right: 0,
-                top: 210,
+                top: 120,
               }}>
               <TouchableOpacity
                 onPress={deletePhoto}
@@ -155,7 +137,7 @@ const EditPage = ({route, navigation}) => {
                 height: 100,
                 width: 100,
                 zIndex: 0,
-                top: 90,
+                top: 10,
                 borderRadius: 50,
               }}
               source={{uri: photo.uri}}
@@ -173,14 +155,14 @@ const EditPage = ({route, navigation}) => {
                 height: 100,
                 width: 100,
                 zIndex: 0,
-                top: 90,
+                top: 10,
                 borderRadius: 50,
               }}
-              source={{uri: ContactId?.photo}}
+              source={ava}
             />
           </View>
         )}
-        <Menu style={{position: 'absolute', right: 130, top: 160}}>
+        <Menu style={{position: 'absolute', right: 120, top: 80}}>
           <MenuTrigger>
             <View
               style={{
@@ -232,7 +214,7 @@ const EditPage = ({route, navigation}) => {
                   paddingVertical: 2,
                   borderRadius: 5,
                 }}
-                placeholder={ContactId?.firstName}
+                placeholder={'First Name'}
                 type="text"
                 onChangeText={newValue => onChange('firstName', newValue)}
               />
@@ -258,7 +240,7 @@ const EditPage = ({route, navigation}) => {
                   paddingVertical: 2,
                   borderRadius: 5,
                 }}
-                placeholder={ContactId?.lastName}
+                placeholder={'Last Name'}
                 type="text"
                 onChangeText={newValue => onChange('lastName', newValue)}
               />
@@ -284,7 +266,7 @@ const EditPage = ({route, navigation}) => {
                   paddingVertical: 2,
                   borderRadius: 5,
                 }}
-                placeholder={`${ContactId?.age}`}
+                placeholder={`Age`}
                 keyboardType="numeric"
                 onChangeText={newValue => onChange('age', newValue)}
               />
@@ -293,7 +275,7 @@ const EditPage = ({route, navigation}) => {
           <TouchableHighlight
             style={{marginTop: 50, width: 300}}
             underlayColor={'#b89b1a'}
-            onPress={() => editData()}>
+            onPress={() => createData()}>
             <Text
               style={{
                 fontSize: 16,
@@ -304,7 +286,7 @@ const EditPage = ({route, navigation}) => {
                 textAlign: 'center',
                 padding: 15,
               }}>
-              Edit Contact
+              Create Contact
             </Text>
           </TouchableHighlight>
         </View>
@@ -324,7 +306,7 @@ const styles = StyleSheet.create({
     width: 330,
     height: 400,
     backgroundColor: 'white',
-    marginTop: 150,
+    marginTop: 100,
     paddingHorizontal: 30,
     alignItems: 'center',
     borderRadius: 10,
@@ -337,4 +319,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default EditPage;
+export default CreatePage;

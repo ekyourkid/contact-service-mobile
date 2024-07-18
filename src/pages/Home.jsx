@@ -1,3 +1,4 @@
+import React, {useState, useEffect} from 'react';
 import {
   ImageBackground,
   View,
@@ -11,10 +12,19 @@ import {
   ScrollView,
 } from 'react-native';
 import avatar from '../../public/images/ava.jpg';
+import {GetDataContact} from '../redux/action/Contact';
+import {useDispatch, useSelector} from 'react-redux';
 
-const HomePage = ({route, navigation}) => {
+const HomePage = ({navigation}) => {
+  const dispatch = useDispatch();
+  const dataContact = useSelector(state => state.DataReducers.data);
+
+  useEffect(() => {
+    dispatch(GetDataContact());
+  }, []);
+
   return (
-    <ScrollView>
+    <View style={{backgroundColor: 'white'}}>
       <StatusBar
         translucent
         backgroundColor={'transparent'}
@@ -26,83 +36,122 @@ const HomePage = ({route, navigation}) => {
         </Text>
         <Text style={{fontSize: 17}}>Find your friend's contacts</Text>
       </View>
-      <ScrollView
-        vertical
-        showsVerticalScrollIndicator={false}
-        style={styles.scrollVertical}>
-        <TouchableOpacity style={styles.card}>
-          <View style={styles.veritcalContainer}>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+      <View style={styles.inpuContainer}>
+        <View
+          style={{
+            flexDirection: 'row',
+            backgroundColor: '#F7F7F7',
+            alignItems: 'center',
+            borderRadius: 10,
+            marginHorizontal: 20,
+          }}>
+          <TextInput
+            style={{
+              width: 200,
+              color: 'black',
+              borderRadius: 5,
+              paddingHorizontal: 15,
+            }}
+            placeholder="Search Pasta, Bread, etc"
+          />
+        </View>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          style={styles.scrollHorizontal}>
+          {dataContact?.map((item, index) => (
+            <TouchableOpacity
+              onPress={() => navigation.navigate('Detail', {id: item?.id})}
+              key={index}
+              style={{
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginHorizontal: 7,
+              }}>
               <Image
-                source={avatar}
+                source={{uri: item?.photo}}
                 style={{width: 50, height: 50, borderRadius: 40}}
               />
-              <View style={{paddingLeft: 10}}>
-                <Text style={{color: 'white', fontSize: 15}}>FirstName</Text>
-                <Text style={{color: 'white'}}>Age</Text>
-              </View>
-            </View>
-            <TouchableOpacity onPress={() => navigation.navigate('Detail')}>
-              <Text style={{color: 'white'}}>Icon</Text>
+              <Text style={{fontSize: 14, fontWeight: '500', paddingTop: 3}}>
+                {item?.firstName}
+              </Text>
             </TouchableOpacity>
-          </View>
-        </TouchableOpacity>
-      </ScrollView>
-      <View style={{paddingTop: 10, paddingHorizontal: 30}}>
-        <Text style={{fontSize: 17, fontWeight: '800'}}>
-          People you may check
-        </Text>
+          ))}
+        </ScrollView>
+        <ScrollView
+          vertical
+          showsVerticalScrollIndicator={false}
+          style={styles.scrollVertical}>
+          {dataContact?.map((item, index) => (
+            <TouchableOpacity
+              onPress={() => navigation.navigate('Detail', {id: item?.id})}
+              key={index}
+              style={styles.card}>
+              <View style={styles.veritcalContainer}>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    paddingLeft: 10,
+                  }}>
+                  <Image
+                    source={{uri: item?.photo}}
+                    style={{
+                      width: 50,
+                      height: 50,
+                      borderRadius: 40,
+                    }}
+                  />
+                  <View style={{paddingLeft: 10}}>
+                    <Text style={{color: 'black', fontSize: 15}}>
+                      {item?.firstName} {item?.lastName}
+                    </Text>
+                    <Text
+                      style={{color: 'black', fontSize: 12, fontWeight: '300'}}>
+                      Age {item?.age}
+                    </Text>
+                  </View>
+                </View>
+              </View>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
       </View>
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        style={styles.scrollHorizontal}>
-        <TouchableOpacity
-          style={{
-            justifyContent: 'center',
-            alignItems: 'center',
-            paddingVertical: 10,
-            marginHorizontal: 5,
-          }}>
-          <Image
-            source={avatar}
-            style={{width: 50, height: 50, borderRadius: 40}}
-          />
-          <Text style={{fontSize: 14, fontWeight: '500', paddingTop: 3}}>
-            FirstName
-          </Text>
-        </TouchableOpacity>
-      </ScrollView>
-    </ScrollView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
+  inpuContainer: {
+    marginBottom: 40,
+    paddingTop: 10,
+    justifyContent: 'space-between',
+  },
   container: {
-    width: 450,
+    width: 300,
     backgroundColor: 'white',
-    paddingTop: 100,
+    paddingTop: 50,
     paddingHorizontal: 30,
   },
   scrollVertical: {
-    width: 450,
-    height: 500,
-    marginTop: 20,
+    width: 360,
+    height: 450,
     paddingHorizontal: 20,
-    paddingVertical: 5,
+    marginVertical: 20,
   },
   scrollHorizontal: {
-    width: 450,
-    marginTop: 20,
+    width: 360,
     paddingHorizontal: 20,
-    paddingVertical: 5,
+    paddingTop: 14,
   },
   card: {
-    backgroundColor: '#604CC3',
+    backgroundColor: 'white',
     justifyContent: 'space-between',
-    padding: 20,
-    borderRadius: 10,
+    padding: 7,
+    borderRadius: 5,
     marginVertical: 5,
+    borderBottomWidth: 1,
+    borderBottomColor: '#DFD3C3',
   },
   veritcalContainer: {
     flexDirection: 'row',
