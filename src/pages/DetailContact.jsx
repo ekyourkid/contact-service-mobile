@@ -123,7 +123,7 @@ const DetailPage = ({route, navigation}) => {
             onPress={() => {
               Alert.alert(
                 'Confirm',
-                'Are you sure you want to delete this recipe?',
+                'Are you sure you want to delete this contact?',
                 [
                   {
                     text: 'Cancel',

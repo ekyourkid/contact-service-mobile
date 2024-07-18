@@ -52,7 +52,7 @@ const HomePage = ({navigation}) => {
               borderRadius: 5,
               paddingHorizontal: 15,
             }}
-            placeholder="Search Pasta, Bread, etc"
+            placeholder="John Doe"
           />
         </View>
         <ScrollView
